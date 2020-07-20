@@ -150,6 +150,11 @@ func NewApp() (app *cli.App) {
 				Usage: "readahead chunk size.",
 			},
 
+			cli.IntFlag{
+				Name:  "MPUPartSize",
+				Value: 5 * 1024 * 1024,
+				Usage: "MPU part size.",
+			},
 			/////////////////////////
 			// S3
 			/////////////////////////
@@ -357,6 +362,9 @@ func PopulateFlags(c *cli.Context) (ret *FlagStorage) {
 		// ReadAhead
 		MaxReadAhead:   uint32(c.Int("max-readahead")),
 		ReadAheadChunk: uint32(c.Int("readahead-chunk")),
+
+		// MPU
+		MPUPartSize: uint64(c.Int("MPUPartSize")),
 	}
 
 	// S3

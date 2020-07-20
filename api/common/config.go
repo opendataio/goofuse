@@ -59,6 +59,9 @@ type FlagStorage struct {
 	// Readahead
 	MaxReadAhead   uint32
 	ReadAheadChunk uint32
+
+	// MPU
+	MPUPartSize uint64
 }
 
 func (flags *FlagStorage) GetMimeType(fileName string) (retMime *string) {
