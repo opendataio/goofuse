@@ -372,6 +372,19 @@ func (dh *DirHandle) listObjects(prefix string) (resp *ListBlobsOutput, err erro
 	}
 }
 
+func NewError(text string) error {
+	return &errorString{text}
+}
+
+// errorString is a trivial implementation of error.
+type errorString struct {
+	s string
+}
+
+func (e *errorString) Error() string {
+	return e.s
+}
+
 // Sorting order of entries in directories is slightly inconsistent between goofys
 // and azblob, s3. This inconsistency can be a problem if the listing involves
 // multiple pagination results. Call this instead of `cloud.ListBlobs` if you are
@@ -392,6 +405,10 @@ func (dh *DirHandle) listObjects(prefix string) (resp *ListBlobsOutput, err erro
 // is nothing left to list or the last listed entry has all characters > "/"
 // Relavant test case: TestReadDirDash
 func listBlobsSafe(cloud StorageBackend, param *ListBlobsInput) (*ListBlobsOutput, error) {
+	if cloud == nil {
+		err := NewError("Cloud storage backend is null.")
+		return nil, err
+	}
 	res, err := cloud.ListBlobs(param)
 	if err != nil {
 		return nil, err
